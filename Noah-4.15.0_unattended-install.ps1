@@ -1,10 +1,9 @@
-﻿# installs noah 4.15.0, build version 4.43.0
+# installs noah 4.15.0, build version 4.43.0
 
 # variables
 $Storage_Needed = 1000000000
 $Version_Current = (Get-Package "Noah 4" | Select-Object -Property Version).Version
 $Version_Newest = [version]"4.43.0"
-$Version_Minimum = [version]"4.0.0" #todo: find out what this should be set to
 $Dir= "C:\Temp"
 $Dir_Full = "$Dir\noah_4.15.0"
 $Installer_URI = "https://s3.us-east-2.amazonaws.com/himsafiles.com/Noah4downloads/Noah4.15.0.6206MSIandMST.zip"
@@ -15,10 +14,6 @@ $Requirements_URI = "https://download.visualstudio.microsoft.com/download/pr/2d6
 # current ver > install ver
 if ($Version_Current -ge $Version_Newest) {
     throw "Current version is same or newer than $Version_Newest"}
-
-# current ver < minimum upgrade ver
-if ($Version_Current -lt $Version_Minimum) {
-    throw "Unable to upgrade from Noah versions older than 4.14.0"}
 
 # enough space to install?
 if ((Get-Volume -DriveLetter C | Select-Object -ExpandProperty SizeRemaining) -lt $Storage_Needed) {
@@ -38,6 +33,7 @@ $Requirements = (Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP
 if ($Requirements -lt [version]"4.6.0") {
     Invoke-WebRequest -Uri $Requirements_URI -OutFile "$Dir_Full\ndp48-x86-x64-allos-enu.exe"
     Start-Process -FilePath "$Dir_Full\ndp48-x86-x64-allos-enu.exe" -ArgumentList "/q /norestart"
+    }
 
 # download and install noah
 Invoke-WebRequest -Uri $Installer_URI -OutFile "$Dir_Full\Noah4.15.0.6206MSIandMST.zip"
