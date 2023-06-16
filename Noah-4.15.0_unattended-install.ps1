@@ -38,8 +38,8 @@ if ($Requirements -lt [version]"4.6.0") {
 # download and install noah
 Invoke-WebRequest -Uri $Installer_URI -OutFile "$Dir_Full\Noah4.15.0.6206MSIandMST.zip"
 Expand-Archive "$Dir_Full\Noah4.15.0.6206MSIandMST.zip" -DestinationPath "$Dir_Full\Noah4.15.0.6206MSIandMST"
-msiexec.exe /i “$Dir_Full\Noah4.15.0.6206MSIandMST\Noah 4.msi” EULAACCEPTED=YES TRANSFORMS=”1033.MST” /qn /norestart
+msiexec.exe /i “$Dir_Full\Noah4.15.0.6206MSIandMST\Noah 4.msi” EULAACCEPTED=YES TRANSFORMS=”1033.MST” /qn /norestart /l*v "log.log"
 
 
 # cleanup if necessary
-Remove-Item -Recurse -Path C:\Temp
+# Remove-Item -Recurse -Path C:\Temp
