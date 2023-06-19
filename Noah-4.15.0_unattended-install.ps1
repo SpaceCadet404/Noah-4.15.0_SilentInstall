@@ -1,9 +1,12 @@
-# installs noah 4.15.0, build version 4.43.0
+# installs noah 4.15.0
+# app version: 4.43.0
+# build version: 6206
 
 # variables
 $Storage_Needed = 1000000000
 $Version_Current = (Get-Package "Noah 4" | Select-Object -Property Version).Version
 $Version_Newest = [version]"4.43.0"
+$Version_Minimum = [version]"4.01.0"
 $Dir= "C:\Temp"
 $Dir_Full = "$Dir\noah_4.15.0"
 $Installer_URI = "https://s3.us-east-2.amazonaws.com/himsafiles.com/Noah4downloads/Noah4.15.0.6206MSIandMST.zip"
@@ -11,9 +14,14 @@ $Requirements_URI = "https://download.visualstudio.microsoft.com/download/pr/2d6
 
 
 # ---/checks/---
+
 # current ver > install ver
 if ($Version_Current -ge $Version_Newest) {
     throw "Current version is same or newer than $Version_Newest"}
+
+# current version at least 4.01.0
+if ($Version_Current -lt $Version_Minimum) {
+    throw "Current version is below required version. Upgrade to $Version_Minimum first, then run this script again. Installed Version: $Version_Current"}
 
 # enough space to install?
 if ((Get-Volume -DriveLetter C | Select-Object -ExpandProperty SizeRemaining) -lt $Storage_Needed) {
@@ -40,6 +48,5 @@ Invoke-WebRequest -Uri $Installer_URI -OutFile "$Dir_Full\Noah4.15.0.6206MSIandM
 Expand-Archive "$Dir_Full\Noah4.15.0.6206MSIandMST.zip" -DestinationPath "$Dir_Full\Noah4.15.0.6206MSIandMST"
 msiexec.exe /i "$Dir_Full\Noah4.15.0.6206MSIandMST\Noah 4.msi" EULAACCEPTED=YES TRANSFORMS="1033.MST" /qn /norestart /l*v "log.log"
 
-
 # cleanup if necessary
-# Remove-Item -Recurse -Path C:\Temp
+Remove-Item -Recurse -Path $Dir_Full
